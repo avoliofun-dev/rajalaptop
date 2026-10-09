@@ -1,0 +1,652 @@
+/* PesananCustomer.module.css */
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1.25rem 4rem;
+}
+
+/* ── Breadcrumb ── */
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-bottom: 1.5rem;
+}
+
+.breadcrumbLink {
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: color var(--t-fast);
+}
+
+.breadcrumbLink:hover {
+  color: var(--clr-primary);
+}
+
+.breadcrumbCurrent {
+  color: var(--text-contrast);
+  font-weight: 600;
+}
+
+/* ── Header Banner ── */
+.headerBanner {
+  background: linear-gradient(135deg, hsl(220, 25%, 12%) 0%, hsl(220, 30%, 16%) 100%);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-xl);
+  padding: 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+  box-shadow: var(--shadow-md);
+  position: relative;
+  overflow: hidden;
+}
+
+.headerInfo {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.headerIcon {
+  width: 64px;
+  height: 64px;
+  border-radius: var(--radius-lg);
+  background: hsla(220, 90%, 56%, 0.15);
+  border: 1px solid var(--glass-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  flex-shrink: 0;
+}
+
+.headerTitle {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: #fff;
+  margin: 0 0 0.35rem;
+}
+
+.headerSubtitle {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  max-width: 580px;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.headerNav {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.primaryBtn {
+  background: var(--clr-primary);
+  color: #fff;
+  padding: 0.65rem 1.25rem;
+  border-radius: var(--radius-md);
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  box-shadow: 0 4px 12px var(--clr-primary-glow);
+  transition: all var(--t-fast);
+}
+
+.primaryBtn:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.1);
+}
+
+.secondaryBtn {
+  background: var(--bg-surface);
+  border: 1px solid var(--glass-border);
+  color: var(--text-primary);
+  padding: 0.65rem 1.25rem;
+  border-radius: var(--radius-md);
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all var(--t-fast);
+}
+
+.secondaryBtn:hover {
+  background: var(--bg-hover);
+  border-color: var(--clr-primary);
+  color: var(--clr-primary);
+}
+
+/* ── Toolbar ── */
+.toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1.75rem;
+}
+
+.tabsWrapper {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.tabBtn {
+  background: var(--bg-card);
+  border: 1px solid var(--glass-border);
+  color: var(--text-secondary);
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-full);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all var(--t-fast);
+}
+
+.tabBtn:hover {
+  color: var(--text-contrast);
+  background: var(--bg-hover);
+}
+
+.activeTab {
+  background: var(--clr-primary);
+  border-color: var(--clr-primary);
+  color: #fff !important;
+  box-shadow: 0 2px 8px var(--clr-primary-glow);
+}
+
+.tabBadge {
+  background: rgba(255, 255, 255, 0.2);
+  padding: 1px 7px;
+  border-radius: var(--radius-full);
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+.searchBox {
+  display: flex;
+  align-items: center;
+  background: var(--bg-surface);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-full);
+  padding: 0.35rem 0.9rem;
+  min-width: 260px;
+}
+
+.searchIcon {
+  font-size: 0.9rem;
+  margin-right: 0.5rem;
+}
+
+.searchInput {
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--text-contrast);
+  font-size: 0.85rem;
+  width: 100%;
+}
+
+.clearSearchBtn {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 0.8rem;
+  padding: 0 4px;
+}
+
+/* ── Order List ── */
+.ordersList {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.orderCard {
+  background: var(--bg-surface);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  transition: all var(--t-fast);
+}
+
+.orderCard:hover {
+  border-color: hsla(220, 90%, 56%, 0.35);
+  box-shadow: var(--shadow-md);
+}
+
+.cardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.5rem;
+  background: var(--bg-card);
+  border-bottom: 1px solid var(--glass-border);
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.headerLeft {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.invoiceBadge {
+  font-size: 0.9rem;
+  font-weight: 800;
+  color: var(--clr-primary);
+}
+
+.orderDate {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+
+.courierTag {
+  font-size: 0.75rem;
+  background: var(--bg-surface);
+  border: 1px solid var(--glass-border);
+  padding: 2px 8px;
+  border-radius: var(--radius-sm);
+  color: var(--text-contrast);
+}
+
+.statusBadge {
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: var(--radius-full);
+  border: 1px solid;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* Card Body */
+.cardBody {
+  padding: 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1.25rem;
+}
+
+.productInfo {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.productIcon {
+  width: 52px;
+  height: 52px;
+  background: var(--bg-card);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.6rem;
+  flex-shrink: 0;
+}
+
+.productName {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--text-contrast);
+  margin: 0 0 0.35rem;
+}
+
+.metaRow {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+
+.priceSection {
+  text-align: right;
+}
+
+.priceLabel {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  margin-bottom: 2px;
+}
+
+.priceValue {
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: var(--text-contrast);
+}
+
+.discountBadge {
+  font-size: 0.72rem;
+  color: #ef4444;
+  font-weight: 600;
+  margin-top: 2px;
+}
+
+/* Card Footer */
+.cardFooter {
+  padding: 1rem 1.5rem;
+  background: var(--bg-card);
+  border-top: 1px solid var(--glass-border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.actionButtons {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  flex-wrap: wrap;
+}
+
+.detailBtn {
+  background: var(--bg-surface);
+  border: 1px solid var(--glass-border);
+  color: var(--text-contrast);
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-md);
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--t-fast);
+}
+
+.detailBtn:hover {
+  background: var(--bg-hover);
+  border-color: var(--clr-primary);
+  color: var(--clr-primary);
+}
+
+.payBtn {
+  background: #f59e0b;
+  border: none;
+  color: #fff;
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-md);
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all var(--t-fast);
+}
+
+.payBtn:hover {
+  filter: brightness(1.1);
+}
+
+.waBtn {
+  background: hsla(142, 70%, 45%, 0.12);
+  border: 1px solid hsla(142, 70%, 45%, 0.3);
+  color: #10b981;
+  padding: 0.5rem 0.85rem;
+  border-radius: var(--radius-md);
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all var(--t-fast);
+}
+
+.waBtn:hover {
+  background: hsla(142, 70%, 45%, 0.2);
+}
+
+/* ── Empty Card ── */
+.emptyCard {
+  background: var(--bg-surface);
+  border: 1px dashed var(--glass-border);
+  border-radius: var(--radius-xl);
+  padding: 4rem 2rem;
+  text-align: center;
+}
+
+.emptyIcon, .spinnerIcon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.emptyCard h3 {
+  font-size: 1.25rem;
+  color: var(--text-contrast);
+  margin: 0 0 0.5rem;
+}
+
+.emptyCard p {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+/* ── Modal Faktur Compact ── */
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(5px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  z-index: 99999;
+}
+
+.modalContent {
+  background: var(--bg-surface);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
+  width: 100%;
+  max-width: 440px;
+  max-height: 88vh;
+  overflow-y: auto;
+  padding: 1.25rem 1.4rem;
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+
+.modalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--glass-border);
+  padding-bottom: 0.75rem;
+}
+
+.modalTitle {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: var(--text-contrast);
+  margin: 0;
+}
+
+.modalSubtitle {
+  font-size: 0.78rem;
+  color: var(--clr-primary);
+  font-weight: 700;
+  margin: 2px 0 0;
+}
+
+.closeBtn {
+  background: transparent;
+  border: none;
+  font-size: 1.1rem;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.closeBtn:hover {
+  color: var(--text-contrast);
+  background: var(--bg-hover);
+}
+
+.modalStatusBox {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+  background: var(--bg-card);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-sm);
+  padding: 0.65rem 0.85rem;
+}
+
+.labelMuted {
+  font-size: 0.68rem;
+  color: var(--text-muted);
+  display: block;
+  margin-bottom: 2px;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+.infoGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.infoBox {
+  background: var(--bg-card);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-sm);
+  padding: 0.65rem 0.85rem;
+  font-size: 0.75rem;
+  line-height: 1.5;
+}
+
+.infoBoxTitle {
+  font-size: 0.68rem;
+  font-weight: 800;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  margin-bottom: 0.35rem;
+}
+
+.infoRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.itemsSection {
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+
+.itemsHeader {
+  background: var(--bg-card);
+  padding: 0.45rem 0.75rem;
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.7rem;
+  font-weight: 800;
+  color: var(--text-secondary);
+  border-bottom: 1px solid var(--glass-border);
+}
+
+.itemRow {
+  padding: 0.65rem 0.75rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 0.75rem;
+  background: var(--bg-surface);
+}
+
+.summaryTotals {
+  background: var(--bg-card);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-sm);
+  padding: 0.65rem 0.85rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  font-size: 0.78rem;
+}
+
+.summaryRow {
+  display: flex;
+  justify-content: space-between;
+}
+
+.summaryRowTotal {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.95rem;
+  font-weight: 800;
+  padding-top: 0.4rem;
+  border-top: 1px dashed var(--glass-border);
+}
+
+.modalActions {
+  display: grid;
+  grid-template-columns: 1fr 80px;
+  gap: 0.5rem;
+  margin-top: 0.25rem;
+}
+
+.printBtn {
+  background: var(--clr-primary);
+  color: #fff;
+  border: none;
+  padding: 0.55rem;
+  border-radius: var(--radius-sm);
+  font-weight: 700;
+  font-size: 0.78rem;
+  cursor: pointer;
+  transition: all var(--t-fast);
+}
+
+.printBtn:hover {
+  filter: brightness(1.1);
+}
+
+.closeModalBtn {
+  background: var(--bg-card);
+  border: 1px solid var(--glass-border);
+  color: var(--text-contrast);
+  padding: 0.55rem;
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+  font-size: 0.78rem;
+  cursor: pointer;
+}
+
+.closeModalBtn:hover {
+  background: var(--bg-hover);
+}

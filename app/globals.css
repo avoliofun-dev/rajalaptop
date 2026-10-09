@@ -1,0 +1,218 @@
+/* ====================================================
+   RajaLaptop – globals.css
+   Premium dark-mode design system
+   ==================================================== */
+
+/* ─── Design Tokens ─── */
+:root,
+[data-theme="dark"] {
+  --font: var(--font-inter), system-ui, sans-serif;
+
+  /* Colors */
+  --clr-primary:        hsl(220, 90%, 56%);
+  --clr-primary-dark:   hsl(220, 90%, 44%);
+  --clr-primary-glow:   hsla(220, 90%, 56%, 0.25);
+  --clr-accent:         hsl(35, 100%, 55%);
+  --clr-danger:         hsl(0, 80%, 58%);
+  --clr-success:        hsl(145, 60%, 45%);
+  --clr-wa:             hsl(142, 70%, 42%);
+
+  /* Backgrounds */
+  --bg-page:         hsl(220, 15%, 7%);
+  --bg-surface:      hsl(220, 14%, 11%);
+  --bg-card:         hsl(220, 13%, 14%);
+  --bg-card-inner:   hsl(220, 15%, 18%);
+  --bg-hover:        hsl(220, 12%, 18%);
+  --glass-bg:        hsla(220, 20%, 100%, 0.05);
+  --glass-border:    hsla(220, 20%, 100%, 0.1);
+  --header-bg:       rgba(15, 23, 42, 0.85);
+  --header-scrolled: rgba(10, 15, 30, 0.95);
+  --topbar-bg:       hsl(220, 15%, 5%);
+  --nav-bg:          rgba(15, 23, 42, 0.7);
+
+  /* Text */
+  --text-primary:   hsl(220, 10%, 95%);
+  --text-secondary: hsl(220, 10%, 65%);
+  --text-muted:     hsl(220, 10%, 45%);
+  --text-contrast:  #ffffff;
+
+  /* Spacing */
+  --space-xs:  0.25rem;
+  --space-sm:  0.5rem;
+  --space-md:  1rem;
+  --space-lg:  1.5rem;
+  --space-xl:  2rem;
+  --space-2xl: 3rem;
+  --space-3xl: 4rem;
+
+  /* Border radius */
+  --radius-sm:   6px;
+  --radius-md:   10px;
+  --radius-lg:   16px;
+  --radius-xl:   24px;
+  --radius-full: 9999px;
+
+  /* Transitions */
+  --t-fast:   0.15s ease;
+  --t-normal: 0.3s ease;
+
+  /* Shadows */
+  --shadow-sm: 0 2px 8px rgba(0,0,0,0.3);
+  --shadow-md: 0 4px 20px rgba(0,0,0,0.4);
+  --shadow-lg: 0 8px 40px rgba(0,0,0,0.5);
+  --shadow-glow: 0 0 20px var(--clr-primary-glow);
+}
+
+[data-theme="light"] {
+  /* Crisp clean light mode */
+  --bg-page:         hsl(215, 25%, 96%);
+  --bg-surface:      hsl(0, 0%, 100%);
+  --bg-card:         hsl(215, 20%, 92%);
+  --bg-card-inner:   hsl(215, 20%, 88%);
+  --bg-hover:        hsl(215, 20%, 86%);
+  --glass-bg:        hsla(220, 30%, 15%, 0.04);
+  --glass-border:    hsla(220, 20%, 20%, 0.12);
+  --header-bg:       rgba(255, 255, 255, 0.9);
+  --header-scrolled: rgba(248, 250, 252, 0.98);
+  --topbar-bg:       hsl(215, 20%, 90%);
+  --nav-bg:          rgba(255, 255, 255, 0.85);
+
+  /* Text */
+  --text-primary:   hsl(220, 30%, 12%);
+  --text-secondary: hsl(220, 15%, 40%);
+  --text-muted:     hsl(220, 10%, 55%);
+  --text-contrast:  #0f172a;
+
+  /* Shadows */
+  --shadow-sm: 0 2px 8px rgba(0,0,0,0.06);
+  --shadow-md: 0 4px 20px rgba(0,0,0,0.08);
+  --shadow-lg: 0 8px 30px rgba(0,0,0,0.12);
+  --shadow-glow: 0 0 20px hsla(220, 90%, 56%, 0.18);
+}
+
+body {
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* ─── Reset ─── */
+*, *::before, *::after {
+  margin: 0; padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0; padding: 0;
+  max-width: 100%;
+  overflow-x: clip;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font);
+  background: var(--bg-page);
+  color: var(--text-primary);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: clip;
+  position: relative;
+}
+
+a { color: inherit; text-decoration: none; }
+img, svg { display: block; }
+ul { list-style: none; }
+
+/* ─── Container ─── */
+.container {
+  width: min(92%, 1280px);
+  margin-inline: auto;
+  max-width: 100%;
+}
+
+/* ─── Utilities ─── */
+.glass {
+  background: var(--glass-bg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--glass-border);
+}
+
+.section-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--space-md);
+  margin-bottom: var(--space-xl);
+}
+
+.section-title {
+  font-size: clamp(1.4rem, 3vw, 1.9rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.section-sub {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  margin-top: 0.2rem;
+}
+
+.text-center { text-align: center; }
+
+.btn-see-all {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--clr-primary);
+  padding: 0.4rem 0.8rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--clr-primary);
+  transition: all var(--t-fast);
+  white-space: nowrap;
+}
+.btn-see-all:hover { background: var(--clr-primary); color: #fff; }
+
+.btn-primary {
+  display: inline-block;
+  background: var(--clr-primary);
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.95rem;
+  padding: 0.8rem 1.8rem;
+  border-radius: var(--radius-full);
+  border: 2px solid var(--clr-primary);
+  transition: all var(--t-fast);
+  cursor: pointer;
+}
+.btn-primary:hover {
+  background: var(--clr-primary-dark);
+  border-color: var(--clr-primary-dark);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-glow);
+}
+
+.btn-outline {
+  display: inline-block;
+  background: transparent;
+  color: var(--text-contrast);
+  font-weight: 600;
+  font-size: 0.95rem;
+  padding: 0.8rem 1.8rem;
+  border-radius: var(--radius-full);
+  border: 2px solid var(--glass-border);
+  transition: all var(--t-fast);
+  cursor: pointer;
+}
+.btn-outline:hover {
+  background: var(--glass-bg);
+  border-color: var(--clr-primary);
+  transform: translateY(-2px);
+}
+
+/* ─── Scrollbar ─── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg-page); }
+::-webkit-scrollbar-thumb { background: var(--bg-hover); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+
+::selection { background: var(--clr-primary-glow); color: var(--text-primary); }

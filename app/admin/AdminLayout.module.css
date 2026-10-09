@@ -1,0 +1,153 @@
+/* AdminLayout.module.css */
+
+.container {
+  display: flex;
+  height: 100vh;
+  height: 100dvh;
+  background: var(--bg-page);
+  color: var(--text-primary);
+  position: relative;
+  width: 100%;
+  max-width: 100vw;
+  overflow: hidden;
+}
+
+/* Sidebar: permanently fixed on desktop, never scrolls away */
+.sidebar {
+  width: 260px;
+  height: 100vh;
+  height: 100dvh;
+  background: var(--bg-surface);
+  border-right: 1px solid var(--glass-border);
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  z-index: 950;
+  overflow: hidden;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.sidebarInner {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: thin;
+  scrollbar-color: var(--bg-hover) transparent;
+}
+
+.sidebarInner::-webkit-scrollbar {
+  width: 4px;
+}
+.sidebarInner::-webkit-scrollbar-thumb {
+  background: var(--bg-hover);
+  border-radius: 2px;
+}
+
+/* Main Content Area: fixed column with its own internal scroll */
+.mainWrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  width: 100%;
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+  transition: margin-left 0.3s ease;
+}
+
+/* Fixed Topbar Header */
+.topbar {
+  height: 64px;
+  background: var(--header-bg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--glass-border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1.5rem;
+  flex-shrink: 0;
+  width: 100%;
+  z-index: 40;
+}
+
+/* Scrollable Content Body */
+.mainContent {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 1.75rem;
+  scrollbar-width: thin;
+  scrollbar-color: var(--bg-hover) transparent;
+}
+
+.mainContent::-webkit-scrollbar {
+  width: 6px;
+}
+.mainContent::-webkit-scrollbar-thumb {
+  background: var(--bg-hover);
+  border-radius: 3px;
+}
+
+/* Desktop: offset content by sidebar width */
+@media (min-width: 1024px) {
+  .mainWrapper {
+    margin-left: 260px;
+    width: calc(100% - 260px);
+    max-width: calc(100% - 260px);
+  }
+  .overlay {
+    display: none !important;
+  }
+  .mobileToggle {
+    display: none !important;
+  }
+}
+
+/* Mobile/Tablet: drawer */
+@media (max-width: 1023px) {
+  .sidebar {
+    transform: translateX(-100%);
+    box-shadow: var(--shadow-lg);
+    z-index: 1000;
+  }
+  .sidebar.open {
+    transform: translateX(0);
+  }
+  .mainWrapper {
+    margin-left: 0;
+    width: 100%;
+  }
+  .mobileToggle {
+    display: flex !important;
+  }
+}
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+  z-index: 999;
+}
+
+.mobileToggle {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  background: var(--bg-surface);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-sm);
+  color: var(--text-contrast);
+  cursor: pointer;
+  font-size: 1.1rem;
+}

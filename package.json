@@ -1,0 +1,32 @@
+{
+  "name": "rajalaptop",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint",
+    "db:reset": "node scripts/dbReset.js",
+    "db:seed:supabase": "node scripts/seed_supabase.js"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.117.3",
+    "bcryptjs": "^3.0.3",
+    "formidable": "^3.5.1",
+    "jose": "^5.2.0",
+    "mysql2": "^3.24.4",
+    "next": "^16.3.6",
+    "pdf-parse": "^1.1.4",
+    "react": "19.2.8",
+    "react-dom": "19.2.8",
+    "sqlite3": "^5.1.6"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4",
+    "@types/bcryptjs": "^2.4.6",
+    "eslint": "^9",
+    "eslint-config-next": "16.3.6",
+    "tailwindcss": "^4"
+  }
+}

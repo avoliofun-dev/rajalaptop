@@ -1,0 +1,51 @@
+.timerWrapper {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: hsla(0, 80%, 58%, 0.1);
+  border: 1px solid hsla(0, 80%, 58%, 0.3);
+  padding: 0.4rem 0.9rem;
+  border-radius: var(--radius-full);
+}
+
+.timerLabel {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--clr-danger);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.boxes {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.box {
+  background: var(--bg-surface);
+  border: 1px solid var(--glass-border);
+  padding: 0.2rem 0.4rem;
+  border-radius: var(--radius-sm);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 32px;
+}
+
+.num {
+  font-size: 0.85rem;
+  font-weight: 800;
+  color: var(--text-contrast);
+  line-height: 1;
+}
+
+.unit {
+  font-size: 0.6rem;
+  color: var(--text-muted);
+}
+
+.colon {
+  font-weight: 800;
+  color: var(--clr-danger);
+}

@@ -1,0 +1,18 @@
+kamu seorang manajer toko laptop dan akan ada projek pengembangan web, gimana konsep dasar untuk halaman dashboard yang dilengkapi
+- topbar,
+- ikon profil pada topbar,
+- sidebar,
+
+ada role
+- super admin
+- owner
+- manager area
+- kepala toko
+- kasir
+- gudang
+- finance
+- digital marketing
+- audit
+
+apa menu yang ada pada sidebar, role apa boleh akses menu apa.
+login sistem dengan gmail aktif + otp real bisa atau tidak
