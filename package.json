@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "eslint",
     "db:reset": "node scripts/dbReset.js",
-    "db:seed:supabase": "node scripts/seed_supabase.js"
+    "db:seed:supabase": "node scripts/seed_supabase.js",
+    "auto:push": "node scripts/watch_push.js"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.117.3",
