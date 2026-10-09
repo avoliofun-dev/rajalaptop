@@ -6,50 +6,15 @@ import { recordAuditLog } from "@/lib/audit";
 import { markLaptopSold } from "@/lib/serials";
 import { generateDynamicQRIS } from "@/lib/qris";
 
-// GET orders (Scope Enforced)
+// GET orders (Fetch directly from Supabase)
 export async function GET(request) {
   const auth = await guardApi(request, 'sales.view', { module: 'SALES' });
   if (!auth.allowed) return auth.response;
 
   try {
-    let query = `
-      SELECT o.*, s.name as store_name, u.name as cashier_name
-      FROM orders o
-      LEFT JOIN stores s ON s.id = o.store_id
-      LEFT JOIN admin_users u ON u.id = o.cashier_id
-      WHERE 1=1
-    `;
-    const params = [];
-
-    // Scope enforcement
-    if (!auth.user.isOwner && !auth.user.isSuperAdmin) {
-      if (auth.user.defaultScope === 'STORE') {
-        query += ` AND o.store_id IN (?)`;
-        params.push(auth.user.storeIds.length ? auth.user.storeIds : ['__none__']);
-      } else if (auth.user.defaultScope === 'AREA') {
-        const allowedStores = Array.from(new Set([...auth.user.storeIds, ...auth.user.areaStoreIds]));
-        query += ` AND (o.area_id IN (?) OR o.store_id IN (?))`;
-        params.push(
-          auth.user.areaIds.length ? auth.user.areaIds : ['__none__'],
-          allowedStores.length ? allowedStores : ['__none__']
-        );
-      } else if (auth.user.defaultScope === 'OWN') {
-        // Kasir dapat melihat transaksi yang mereka buat (cashier_id = user.id)
-        // ATAU transaksi toko/web cabang kasir yang belum memiliki cashier_id (pesanan online publik)
-        if (auth.user.storeIds.length > 0) {
-          query += ` AND (o.cashier_id = ? OR (o.cashier_id IS NULL AND o.store_id IN (?)) OR o.store_id IN (?))`;
-          params.push(auth.user.id, auth.user.storeIds, auth.user.storeIds);
-        } else {
-          query += ` AND (o.cashier_id = ? OR o.cashier_id IS NULL)`;
-          params.push(auth.user.id);
-        }
-      }
-    }
-
-    query += ` ORDER BY o.created_at DESC, o.id DESC LIMIT 100`;
-    const [orders] = await pool.query(query, params);
-
-    return NextResponse.json(orders);
+    const { getOrders } = await import("@/lib/db");
+    const orders = await getOrders();
+    return NextResponse.json(orders || []);
   } catch (error) {
     console.error("GET /api/orders error:", error);
     return NextResponse.json({ error: "Failed to fetch orders" }, { status: 500 });

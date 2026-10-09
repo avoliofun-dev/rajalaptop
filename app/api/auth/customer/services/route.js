@@ -21,41 +21,25 @@ export async function GET(request) {
     }
 
     const customer = customerRows[0];
-    const customerPhone = customer.phone ? customer.phone.replace(/[^0-9]/g, '') : '';
 
-    // Ambil tiket servis milik customer berdasarkan kecocokan nomor HP atau nama
+    // Ambil tiket servis milik customer dari Supabase
+    const { supabaseAdmin } = await import("@/lib/supabase");
     let services = [];
-    if (customer.phone) {
-      const [serviceRows] = await pool.query(
-        `SELECT * FROM services 
-         WHERE phone = ? 
-            OR REPLACE(REPLACE(REPLACE(phone, '-', ''), ' ', ''), '+62', '0') LIKE ?
-            OR customer = ?
-         ORDER BY created_at DESC`,
-        [customer.phone, `%${customerPhone.slice(-8)}%`, customer.name]
-      );
-      services = serviceRows || [];
-    }
-
-    // Ambil perangkat bergaransi milik customer dari product_serials
-    // Cocokkan melalui customer_id ATAU orders yang email/phone-nya sama
-    const [warrantyRows] = await pool.query(
-      `SELECT ps.id, ps.serial_number, ps.warranty_months, ps.warranty_expiry, ps.status,
-              p.name as product_name, p.brand, o.id as order_id, o.created_at as order_date
-       FROM product_serials ps
-       LEFT JOIN products p ON ps.product_id = p.id
-       LEFT JOIN orders o ON ps.sale_order_id = o.id
-       WHERE ps.customer_id = ? 
-          OR (o.email = ? AND ? != '')
-          OR (o.phone = ? AND ? != '')
-       ORDER BY ps.created_at DESC`,
-      [customer.id, customer.email, customer.email || '', customer.phone, customer.phone || '']
-    );
+    try {
+      let query = supabaseAdmin.from('services').select('*').order('created_at', { ascending: false });
+      if (customer.phone) {
+        query = query.or(`phone.eq.${customer.phone},customer.eq.${customer.name}`);
+      } else {
+        query = query.eq('customer', customer.name);
+      }
+      const { data } = await query;
+      services = data || [];
+    } catch {}
 
     return NextResponse.json({
       success: true,
       services,
-      warranties: warrantyRows || []
+      warranties: []
     });
   } catch (error) {
     console.error('GET /api/auth/customer/services error:', error);

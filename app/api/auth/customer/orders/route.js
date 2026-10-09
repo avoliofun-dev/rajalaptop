@@ -20,13 +20,26 @@ export async function GET(request) {
     const email = customer.email;
     const phone = customer.phone;
 
-    // Ambil pesanan milik pelanggan ini berdasarkan email atau nomor telepon
-    const [orders] = await pool.query(
-      `SELECT * FROM orders 
-       WHERE email = ? OR (phone != '' AND phone IS NOT NULL AND phone = ?)
-       ORDER BY created_at DESC, id DESC`,
-      [email, phone]
-    );
+    // Ambil pesanan milik pelanggan ini dari Supabase
+    const { supabaseAdmin } = await import("@/lib/supabase");
+    let ordersQuery = supabaseAdmin
+      .from('orders')
+      .select('*')
+      .order('created_at', { ascending: false });
+
+    if (email && phone) {
+      ordersQuery = ordersQuery.or(`email.eq.${email},phone.eq.${phone}`);
+    } else if (email) {
+      ordersQuery = ordersQuery.eq('email', email);
+    } else if (phone) {
+      ordersQuery = ordersQuery.eq('phone', phone);
+    }
+
+    const { data: orders, error } = await ordersQuery;
+    if (error) {
+      console.error('Supabase customer orders error:', error);
+      return NextResponse.json({ success: true, orders: [] });
+    }
 
     return NextResponse.json({ success: true, orders: orders || [] });
   } catch (error) {
