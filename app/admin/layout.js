@@ -188,6 +188,9 @@ export default function AdminLayout({ children }) {
     }))
     .filter((grp) => grp.items.length > 0);
 
+  // Flat list of all navigation items for route lookup
+  const allNavigationItems = navigationGroups.flatMap((grp) => grp.items);
+
   const totalVisibleMenus = visibleGroups.reduce((acc, g) => acc + g.items.length, 0);
 
   return (
@@ -468,7 +471,7 @@ export default function AdminLayout({ children }) {
             <div style={{ display: "flex", alignItems: "center", gap: "0.45rem" }}>
               {(() => {
                 const current =
-                  navigationItems.find((item) => pathname === item.href) ||
+                  allNavigationItems.find((item) => pathname === item.href) ||
                   (pathname?.startsWith("/admin/datadiri")
                     ? { label: "Data Diri Admin", icon: "👤" }
                     : { label: "Admin Panel", icon: "💻" });
