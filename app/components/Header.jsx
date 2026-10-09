@@ -19,6 +19,7 @@ const ROLE_METADATA = {
 
 const ADMIN_NAVIGATION_ITEMS = [
   { id: "dashboard", label: "Dashboard", href: "/admin/dashboard", icon: "📊", permission: "dashboard.view" },
+  { id: "panduan", label: "Pusat Panduan & SOP", href: "/admin/panduan", icon: "📚", isPublicForAdmin: true },
   { id: "produk", label: "Katalog Laptop", href: "/admin/produk", icon: "💻", permission: "products.view" },
   { id: "pesanan", label: "Penjualan & POS", href: "/admin/pesanan", icon: "🛍️", permission: "sales.view" },
   { id: "serials", label: "Serial Number & IMEI", href: "/admin/serials", icon: "🏷️", permission: "serials.view" },
@@ -62,6 +63,7 @@ export default function Header({ onMenuToggle }) {
   const visibleAdminMenus = useMemo(() => {
     if (!currentAdmin) return [];
     return ADMIN_NAVIGATION_ITEMS.filter((item) => {
+      if (item.isPublicForAdmin) return true;
       if (item.superAdminOnly) {
         return Boolean(currentAdmin.isSuperAdmin || currentAdmin.role === "super_admin" || currentAdmin.isOwner || currentAdmin.role === "owner");
       }

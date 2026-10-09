@@ -134,6 +134,7 @@ export default function AdminLayout({ children }) {
       group: "Utama",
       items: [
         { id: "dashboard", label: "Dashboard", href: "/admin/dashboard", icon: "📊", permission: "dashboard.view" },
+        { id: "panduan", label: "Pusat Panduan & SOP", href: "/admin/panduan", icon: "📚", isPublicForAdmin: true },
       ],
     },
     {
@@ -173,6 +174,7 @@ export default function AdminLayout({ children }) {
 
   // Helper check permission for an item
   const canAccessItem = (item) => {
+    if (item.isPublicForAdmin) return true;
     if (item.superAdminOnly) {
       return Boolean(adminUser.isSuperAdmin || adminUser.role === "super_admin" || adminUser.isOwner || adminUser.role === "owner");
     }
