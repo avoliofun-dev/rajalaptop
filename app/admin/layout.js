@@ -128,36 +128,67 @@ export default function AdminLayout({ children }) {
     icon: "👤",
   };
 
-  // Master navigation list with required permission mapping
-  const navigationItems = [
-    { id: "dashboard", label: "Dashboard", href: "/admin/dashboard", icon: "📊", permission: "dashboard.view" },
-    { id: "produk", label: "Katalog Laptop", href: "/admin/produk", icon: "💻", permission: "products.view" },
-    { id: "pesanan", label: "Penjualan & POS", href: "/admin/pesanan", icon: "🛍️", permission: "sales.view" },
-    { id: "serials", label: "Serial Number & IMEI", href: "/admin/serials", icon: "🏷️", permission: "serials.view" },
-    { id: "approvals", label: "Approval Otorisasi", href: "/admin/approvals", icon: "📝", permission: "approval.view" },
-    { id: "servis", label: "Tiket Servis", href: "/admin/servis", icon: "🔧", permission: "service.view" },
-    { id: "audit-logs", label: "Audit Trail", href: "/admin/audit-logs", icon: "🛡️", permission: "audit.view" },
-    { id: "roles", label: "Role & Izin (RBAC)", href: "/admin/roles", icon: "🔑", permission: "roles.view" },
-    { id: "admins", label: "Staf & Hak Akses", href: "/admin/admins", icon: "👥", permission: "users.view" },
-    { id: "customers", label: "Pelanggan Terdaftar", href: "/admin/customers", icon: "👤", permission: "users.view" },
-    { id: "settings", label: "Konfigurasi Web", href: "/admin/settings", icon: "⚙️", permission: "settings.manage" },
-    { id: "heroslider", label: "Setting Hero Slider", href: "/admin/heroslider", icon: "🖼️", permission: "settings.manage" },
-    { id: "footer", label: "Setting Footer", href: "/admin/footer", icon: "👣", permission: "settings.manage" },
-    { id: "progres", label: "Progres Web", href: "/admin/progres", icon: "🚀", superAdminOnly: true },
+  // Master navigation grouped by categories with required permission mapping
+  const navigationGroups = [
+    {
+      group: "Utama",
+      items: [
+        { id: "dashboard", label: "Dashboard", href: "/admin/dashboard", icon: "📊", permission: "dashboard.view" },
+      ],
+    },
+    {
+      group: "Operasional & Transaksi",
+      items: [
+        { id: "produk", label: "Katalog Laptop", href: "/admin/produk", icon: "💻", permission: "products.view" },
+        { id: "pesanan", label: "Penjualan & POS", href: "/admin/pesanan", icon: "🛍️", permission: "sales.view" },
+        { id: "serials", label: "Serial & IMEI", href: "/admin/serials", icon: "🏷️", permission: "serials.view" },
+        { id: "approvals", label: "Approval Otorisasi", href: "/admin/approvals", icon: "📝", permission: "approval.view" },
+        { id: "servis", label: "Tiket Servis", href: "/admin/servis", icon: "🔧", permission: "service.view" },
+      ],
+    },
+    {
+      group: "Pengguna & Keanggotaan",
+      items: [
+        { id: "customers", label: "Pelanggan Terdaftar", href: "/admin/customers", icon: "👤", permission: "users.view" },
+        { id: "admins", label: "Staf & Hak Akses", href: "/admin/admins", icon: "👥", permission: "users.view" },
+        { id: "roles", label: "Role & Izin (RBAC)", href: "/admin/roles", icon: "🔑", permission: "roles.view" },
+      ],
+    },
+    {
+      group: "Pengaturan & Konten",
+      items: [
+        { id: "settings", label: "Konfigurasi Web", href: "/admin/settings", icon: "⚙️", permission: "settings.manage" },
+        { id: "heroslider", label: "Hero Slider", href: "/admin/heroslider", icon: "🖼️", permission: "settings.manage" },
+        { id: "footer", label: "Footer Info", href: "/admin/footer", icon: "👣", permission: "settings.manage" },
+      ],
+    },
+    {
+      group: "Sistem & Keamanan",
+      items: [
+        { id: "audit-logs", label: "Audit Trail", href: "/admin/audit-logs", icon: "🛡️", permission: "audit.view" },
+        { id: "progres", label: "Progres Web", href: "/admin/progres", icon: "🚀", superAdminOnly: true },
+      ],
+    },
   ];
 
-  // Dynamic menu filtering strictly based on user's granted permissions
-  // Catatan: isOwner tidak membypass settings.manage; hanya role dengan izin settings.manage yang dapat melihat menu Konfigurasi Web
-  const visibleMenus = navigationItems.filter((item) => {
+  // Helper check permission for an item
+  const canAccessItem = (item) => {
     if (item.superAdminOnly) {
       return Boolean(adminUser.isSuperAdmin || adminUser.role === "super_admin" || adminUser.isOwner || adminUser.role === "owner");
     }
-    // Hanya Super Admin yang memiliki akses bypass penuh
     if (adminUser.isSuperAdmin || adminUser.role === "super_admin") return true;
-
-    // Untuk role lainnya (termasuk Owner), evaluasi izin secara ketat
     return Boolean(adminUser.permissionSlugs && adminUser.permissionSlugs.includes(item.permission));
-  });
+  };
+
+  // Filter groups keeping only visible items and non-empty groups
+  const visibleGroups = navigationGroups
+    .map((grp) => ({
+      ...grp,
+      items: grp.items.filter(canAccessItem),
+    }))
+    .filter((grp) => grp.items.length > 0);
+
+  const totalVisibleMenus = visibleGroups.reduce((acc, g) => acc + g.items.length, 0);
 
   return (
     <div className={styles.container}>
@@ -282,36 +313,58 @@ export default function AdminLayout({ children }) {
             )}
           </div>
 
-          {/* Dynamic Navigation */}
-          <nav style={{ padding: "0.75rem 1rem", flex: 1, display: "flex", flexDirection: "column", gap: "0.35rem", overflowY: "auto" }}>
-            <div style={{ fontSize: "0.7rem", color: "var(--text-muted)", textTransform: "uppercase", padding: "0.4rem 0.5rem", fontWeight: 700 }}>
-              Navigasi Berizin ({visibleMenus.length})
-            </div>
-            {visibleMenus.map((item) => {
-              const isActive = pathname === item.href;
-              return (
-                <Link
-                  key={item.id}
-                  href={item.href}
-                  onClick={() => setSidebarOpen(false)}
+          {/* Dynamic Navigation Grouped */}
+          <nav style={{ padding: "0.5rem 0.85rem 1rem", flex: 1, display: "flex", flexDirection: "column", gap: "1rem", overflowY: "auto" }}>
+            {visibleGroups.map((group, grpIdx) => (
+              <div key={group.group} style={{ display: "flex", flexDirection: "column", gap: "0.2rem" }}>
+                <div
                   style={{
+                    fontSize: "0.68rem",
+                    color: "var(--text-muted)",
+                    textTransform: "uppercase",
+                    padding: "0.25rem 0.6rem",
+                    fontWeight: 800,
+                    letterSpacing: "0.6px",
                     display: "flex",
                     alignItems: "center",
-                    gap: "0.75rem",
-                    padding: "0.65rem 0.9rem",
-                    borderRadius: "var(--radius-md)",
-                    fontSize: "0.85rem",
-                    fontWeight: isActive ? 700 : 500,
-                    background: isActive ? "var(--clr-primary)" : "transparent",
-                    color: isActive ? "#fff" : "var(--text-secondary)",
-                    transition: "all var(--t-fast)",
+                    justifyContent: "space-between",
                   }}
                 >
-                  <span style={{ fontSize: "1.1rem" }}>{item.icon}</span>
-                  <span>{item.label}</span>
-                </Link>
-              );
-            })}
+                  <span>{group.group}</span>
+                  {grpIdx === 0 && (
+                    <span style={{ fontSize: "0.65rem", opacity: 0.7 }}>({totalVisibleMenus} menu)</span>
+                  )}
+                </div>
+
+                <div style={{ display: "flex", flexDirection: "column", gap: "0.25rem" }}>
+                  {group.items.map((item) => {
+                    const isActive = pathname === item.href;
+                    return (
+                      <Link
+                        key={item.id}
+                        href={item.href}
+                        onClick={() => setSidebarOpen(false)}
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: "0.75rem",
+                          padding: "0.6rem 0.85rem",
+                          borderRadius: "var(--radius-md)",
+                          fontSize: "0.85rem",
+                          fontWeight: isActive ? 700 : 500,
+                          background: isActive ? "var(--clr-primary)" : "transparent",
+                          color: isActive ? "#fff" : "var(--text-secondary)",
+                          transition: "all var(--t-fast)",
+                        }}
+                      >
+                        <span style={{ fontSize: "1.1rem" }}>{item.icon}</span>
+                        <span>{item.label}</span>
+                      </Link>
+                    );
+                  })}
+                </div>
+              </div>
+            ))}
           </nav>
 
           {/* User Profile & Logout */}
