@@ -139,6 +139,7 @@ export default function AdminLayout({ children }) {
     { id: "audit-logs", label: "Audit Trail", href: "/admin/audit-logs", icon: "🛡️", permission: "audit.view" },
     { id: "roles", label: "Role & Izin (RBAC)", href: "/admin/roles", icon: "🔑", permission: "roles.view" },
     { id: "admins", label: "Staf & Hak Akses", href: "/admin/admins", icon: "👥", permission: "users.view" },
+    { id: "customers", label: "Pelanggan Terdaftar", href: "/admin/customers", icon: "👤", permission: "users.view" },
     { id: "settings", label: "Konfigurasi Web", href: "/admin/settings", icon: "⚙️", permission: "settings.manage" },
     { id: "heroslider", label: "Setting Hero Slider", href: "/admin/heroslider", icon: "🖼️", permission: "settings.manage" },
     { id: "footer", label: "Setting Footer", href: "/admin/footer", icon: "👣", permission: "settings.manage" },
