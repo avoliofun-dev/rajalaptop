@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useSettings } from "@/app/context/SettingsContext";
 import styles from "./Sidebar.module.css";
 
@@ -77,6 +77,28 @@ const CUSTOMER_NAV = [
 
 export default function Sidebar({ isOpen, onClose }) {
   const pathname = usePathname();
+  const router = useRouter();
+
+  const handleNavClick = (e, item) => {
+    if (item.href.startsWith("/#")) {
+      e.preventDefault();
+      const targetId = item.href.replace("/#", "");
+      onClose?.();
+
+      if (pathname === "/") {
+        const targetEl = document.getElementById(targetId);
+        if (targetEl) {
+          targetEl.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+      } else {
+        router.push(item.href);
+      }
+      return;
+    }
+    onClose?.();
+  };
+
+
   const [currentUser, setCurrentUser] = useState(null);
   const [cartCount, setCartCount] = useState(0);
   const { settings } = useSettings();
@@ -303,7 +325,7 @@ export default function Sidebar({ isOpen, onClose }) {
                         className={`${styles.navLink} ${
                           isActive ? styles.active : ""
                         }`}
-                        onClick={onClose}
+                        onClick={(e) => handleNavClick(e, item)}
                       >
                         <span className={styles.navIcon}>{item.icon}</span>
                         <span className={styles.navLabel}>{item.label}</span>
