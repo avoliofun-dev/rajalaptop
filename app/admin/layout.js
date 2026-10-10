@@ -193,7 +193,10 @@ export default function AdminLayout({ children }) {
   // Flat list of all navigation items for route lookup
   const allNavigationItems = navigationGroups.flatMap((grp) => grp.items);
 
-  const totalVisibleMenus = visibleGroups.reduce((acc, g) => acc + g.items.length, 0);
+  // Flat list of all currently visible items for quick menu access
+  const visibleMenus = visibleGroups.flatMap((grp) => grp.items);
+  const totalVisibleMenus = visibleMenus.length;
+
 
   return (
     <div className={styles.container}>
