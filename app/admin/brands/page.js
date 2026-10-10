@@ -6,6 +6,17 @@ const EMOJI_PRESETS = [
   "💻", "⚡", "🍏", "🐲", "💼", "🔥", "🏢", "🇮🇩", "🎮", "🚀", "👑", "🎯", "🛡️", "⭐", "💎", "🖥️", "⌨️", "🎧", "📱", "✨"
 ];
 
+function isImageUrl(url) {
+  if (!url || typeof url !== "string") return false;
+  return (
+    url.startsWith("http://") ||
+    url.startsWith("https://") ||
+    url.startsWith("/") ||
+    url.startsWith("data:image/") ||
+    url.includes("/uploads/")
+  );
+}
+
 export default function AdminBrandsPage() {
   const [brands, setBrands] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -13,6 +24,7 @@ export default function AdminBrandsPage() {
   const [editingBrand, setEditingBrand] = useState(null);
   const [selectedIcon, setSelectedIcon] = useState("");
   const [saving, setSaving] = useState(false);
+  const [uploadingImage, setUploadingImage] = useState(false);
 
   const loadBrands = async () => {
     try {
@@ -62,6 +74,33 @@ export default function AdminBrandsPage() {
     setSelectedIcon(b.icon || "💻");
   };
 
+  const handleUploadImage = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    try {
+      setUploadingImage(true);
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("folder", "logo");
+
+      const res = await fetch("/api/upload", {
+        method: "POST",
+        body: formData,
+      });
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Gagal mengunggah gambar logo");
+
+      setSelectedIcon(data.url);
+      alert("Foto/logo JPG/PNG berhasil diunggah!");
+    } catch (err) {
+      alert("Upload error: " + err.message);
+    } finally {
+      setUploadingImage(false);
+    }
+  };
+
   const handleSaveIcon = async (e) => {
     e.preventDefault();
     if (!editingBrand) return;
@@ -82,7 +121,7 @@ export default function AdminBrandsPage() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Gagal mengubah ikon");
 
-      alert(`Ikon untuk brand "${editingBrand.name}" berhasil diubah menjadi ${selectedIcon}!`);
+      alert(`Ikon/Logo untuk brand "${editingBrand.name}" berhasil disimpan!`);
       setEditingBrand(null);
       await loadBrands();
     } catch (err) {
@@ -114,7 +153,7 @@ export default function AdminBrandsPage() {
           </h1>
         </div>
         <p style={{ fontSize: "0.85rem", color: "var(--text-secondary)" }}>
-          Semua unit 100% Bergaransi Resmi Distributor Indonesia (TAM, Datascrip, Synnex, dll). Klik brand di bawah untuk mengganti ikon merk.
+          Semua unit 100% Bergaransi Resmi Distributor Indonesia (TAM, Datascrip, Synnex, dll). Anda dapat mengganti ikon merk dengan <strong>Emoji</strong> atau <strong>Upload Gambar Foto/Logo (JPG, PNG, WebP)</strong>.
         </p>
       </div>
 
@@ -129,73 +168,88 @@ export default function AdminBrandsPage() {
             gap: "1rem",
           }}
         >
-          {brands.map((b) => (
-            <div
-              key={b.id || b.name}
-              style={{
-                background: "var(--bg-surface)",
-                border: "1px solid var(--glass-border)",
-                borderRadius: "var(--radius-lg)",
-                padding: "1.25rem 1rem",
-                textAlign: "center",
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                gap: "0.5rem",
-                position: "relative",
-              }}
-            >
+          {brands.map((b) => {
+            const hasImg = isImageUrl(b.icon);
+            return (
               <div
+                key={b.id || b.name}
                 style={{
-                  fontSize: "2.5rem",
-                  lineHeight: 1,
-                  padding: "0.5rem",
-                  background: "var(--bg-card)",
-                  borderRadius: "var(--radius-md)",
+                  background: "var(--bg-surface)",
                   border: "1px solid var(--glass-border)",
-                  width: "60px",
-                  height: "60px",
+                  borderRadius: "var(--radius-lg)",
+                  padding: "1.25rem 1rem",
+                  textAlign: "center",
                   display: "flex",
+                  flexDirection: "column",
                   alignItems: "center",
-                  justifyContent: "center",
+                  gap: "0.5rem",
+                  position: "relative",
                 }}
               >
-                {b.icon || "💻"}
+                <div
+                  style={{
+                    padding: "0.5rem",
+                    background: "var(--bg-card)",
+                    borderRadius: "var(--radius-md)",
+                    border: "1px solid var(--glass-border)",
+                    width: "68px",
+                    height: "68px",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    overflow: "hidden"
+                  }}
+                >
+                  {hasImg ? (
+                    <img
+                      src={b.icon}
+                      alt={b.name}
+                      style={{
+                        maxWidth: "100%",
+                        maxHeight: "100%",
+                        objectFit: "contain",
+                        display: "block"
+                      }}
+                    />
+                  ) : (
+                    <span style={{ fontSize: "2.5rem", lineHeight: 1 }}>{b.icon || "💻"}</span>
+                  )}
+                </div>
+
+                <strong style={{ fontSize: "1.05rem", color: "var(--text-contrast)" }}>
+                  {b.name}
+                </strong>
+
+                <span style={{ fontSize: "0.75rem", color: "var(--clr-primary)", fontWeight: 600 }}>
+                  {b.desc || "Official Partner"}
+                </span>
+
+                <button
+                  type="button"
+                  onClick={() => openEditModal(b)}
+                  style={{
+                    marginTop: "0.5rem",
+                    width: "100%",
+                    padding: "0.5rem 0.75rem",
+                    background: "var(--clr-primary)",
+                    color: "#fff",
+                    border: "none",
+                    borderRadius: "var(--radius-sm)",
+                    fontSize: "0.78rem",
+                    fontWeight: 700,
+                    cursor: "pointer",
+                    transition: "opacity var(--t-fast)",
+                  }}
+                >
+                  🎨 Ganti Logo / Ikon
+                </button>
               </div>
-
-              <strong style={{ fontSize: "1.05rem", color: "var(--text-contrast)" }}>
-                {b.name}
-              </strong>
-
-              <span style={{ fontSize: "0.75rem", color: "var(--clr-primary)", fontWeight: 600 }}>
-                {b.desc || "Official Partner"}
-              </span>
-
-              <button
-                type="button"
-                onClick={() => openEditModal(b)}
-                style={{
-                  marginTop: "0.5rem",
-                  width: "100%",
-                  padding: "0.5rem 0.75rem",
-                  background: "var(--clr-primary)",
-                  color: "#fff",
-                  border: "none",
-                  borderRadius: "var(--radius-sm)",
-                  fontSize: "0.78rem",
-                  fontWeight: 700,
-                  cursor: "pointer",
-                  transition: "opacity var(--t-fast)",
-                }}
-              >
-                🎨 Ganti Ikon Merk
-              </button>
-            </div>
-          ))}
+            );
+          })}
         </div>
       )}
 
-      {/* Modal Ubah Ikon */}
+      {/* Modal Ubah Ikon / Upload Foto */}
       {editingBrand && (
         <div
           style={{
@@ -218,13 +272,13 @@ export default function AdminBrandsPage() {
               borderRadius: "var(--radius-lg)",
               padding: "1.75rem",
               width: "100%",
-              maxWidth: "460px",
+              maxWidth: "480px",
             }}
             onClick={(e) => e.stopPropagation()}
           >
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1rem" }}>
               <h2 style={{ fontSize: "1.2rem", fontWeight: 800, color: "var(--text-contrast)" }}>
-                Ganti Ikon: {editingBrand.name}
+                Ganti Logo: {editingBrand.name}
               </h2>
               <button
                 type="button"
@@ -235,31 +289,91 @@ export default function AdminBrandsPage() {
               </button>
             </div>
 
-            <form onSubmit={handleSaveIcon} style={{ display: "flex", flexDirection: "column", gap: "1.25rem" }}>
+            <form onSubmit={handleSaveIcon} style={{ display: "flex", flexDirection: "column", gap: "1.2rem" }}>
               {/* Preview Ikon Terpilih */}
               <div
                 style={{
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  gap: "1rem",
+                  gap: "1.2rem",
                   padding: "1rem",
                   background: "var(--bg-card)",
                   borderRadius: "var(--radius-md)",
                   border: "1px solid var(--glass-border)",
                 }}
               >
-                <span style={{ fontSize: "3rem" }}>{selectedIcon}</span>
+                <div style={{
+                  width: "70px",
+                  height: "70px",
+                  background: "var(--bg-surface)",
+                  borderRadius: "var(--radius-sm)",
+                  border: "1px solid var(--glass-border)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  overflow: "hidden"
+                }}>
+                  {isImageUrl(selectedIcon) ? (
+                    <img
+                      src={selectedIcon}
+                      alt={editingBrand.name}
+                      style={{ maxWidth: "100%", maxHeight: "100%", objectFit: "contain" }}
+                    />
+                  ) : (
+                    <span style={{ fontSize: "2.8rem" }}>{selectedIcon || "💻"}</span>
+                  )}
+                </div>
+
                 <div>
-                  <div style={{ fontSize: "0.8rem", color: "var(--text-muted)" }}>Pratinjau Merk</div>
+                  <div style={{ fontSize: "0.75rem", color: "var(--text-muted)" }}>Pratinjau Saat Ini</div>
                   <strong style={{ fontSize: "1.1rem", color: "var(--text-contrast)" }}>{editingBrand.name}</strong>
+                  <div style={{ fontSize: "0.7rem", color: "var(--clr-primary)", marginTop: "2px" }}>
+                    {isImageUrl(selectedIcon) ? "🖼️ Format Gambar Logo" : "✨ Format Emoji Simbol"}
+                  </div>
                 </div>
               </div>
 
-              {/* Pilihan Cepat Preset Emoji */}
+              {/* METODE 1: UPLOAD GAMBAR JPG / PNG / WEBP */}
+              <div style={{
+                background: "hsla(220, 90%, 56%, 0.06)",
+                border: "1px dashed var(--clr-primary)",
+                borderRadius: "var(--radius-md)",
+                padding: "0.85rem 1rem",
+              }}>
+                <label style={{ display: "block", fontSize: "0.8rem", fontWeight: 800, color: "var(--clr-primary)", marginBottom: "4px" }}>
+                  📁 Opsi 1: Upload File Gambar Logo (JPG / PNG / WebP)
+                </label>
+                <p style={{ fontSize: "0.72rem", color: "var(--text-secondary)", marginBottom: "8px" }}>
+                  Pilih gambar logo merk berlatar transparan atau putih dari galeri/komputer Anda:
+                </p>
+                <label style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: "0.4rem",
+                  background: "var(--clr-primary)",
+                  color: "#fff",
+                  padding: "0.5rem 0.9rem",
+                  borderRadius: "var(--radius-sm)",
+                  fontSize: "0.8rem",
+                  fontWeight: 700,
+                  cursor: "pointer",
+                }}>
+                  {uploadingImage ? "⏳ Mengunggah ke Supabase..." : "📤 Pilih File Gambar Logo"}
+                  <input
+                    type="file"
+                    accept="image/png, image/jpeg, image/jpg, image/webp, image/svg+xml"
+                    onChange={handleUploadImage}
+                    disabled={uploadingImage}
+                    style={{ display: "none" }}
+                  />
+                </label>
+              </div>
+
+              {/* METODE 2: PRESET EMOJI POPULER */}
               <div>
                 <label style={{ display: "block", fontSize: "0.75rem", fontWeight: 700, color: "var(--text-secondary)", marginBottom: "6px" }}>
-                  Pilih dari Ikon Populer:
+                  ✨ Opsi 2: Atau Gunakan Ikon Simbol Emoji:
                 </label>
                 <div style={{ display: "grid", gridTemplateColumns: "repeat(10, 1fr)", gap: "6px" }}>
                   {EMOJI_PRESETS.map((emoji) => (
@@ -286,29 +400,6 @@ export default function AdminBrandsPage() {
                 </div>
               </div>
 
-              {/* Input Manual Emoji / Simbol */}
-              <div>
-                <label style={{ display: "block", fontSize: "0.75rem", fontWeight: 700, color: "var(--text-secondary)", marginBottom: "4px" }}>
-                  Atau Ketik Ikon Manual (Emoji / Simbol Text):
-                </label>
-                <input
-                  type="text"
-                  value={selectedIcon}
-                  onChange={(e) => setSelectedIcon(e.target.value)}
-                  placeholder="Ketik atau tempel emoji di sini..."
-                  style={{
-                    width: "100%",
-                    padding: "0.6rem 0.8rem",
-                    background: "var(--bg-card)",
-                    border: "1px solid var(--glass-border)",
-                    borderRadius: "var(--radius-sm)",
-                    color: "var(--text-contrast)",
-                    fontSize: "1rem",
-                    textAlign: "center",
-                  }}
-                />
-              </div>
-
               <div style={{ display: "flex", gap: "0.75rem", marginTop: "0.5rem" }}>
                 <button
                   type="button"
@@ -328,7 +419,7 @@ export default function AdminBrandsPage() {
                 </button>
                 <button
                   type="submit"
-                  disabled={saving || !selectedIcon}
+                  disabled={saving || !selectedIcon || uploadingImage}
                   style={{
                     flex: 1,
                     padding: "0.65rem",
@@ -340,7 +431,7 @@ export default function AdminBrandsPage() {
                     fontWeight: 700,
                   }}
                 >
-                  {saving ? "Menyimpan..." : "Simpan Ikon"}
+                  {saving ? "Menyimpan..." : "Simpan Logo Merk"}
                 </button>
               </div>
             </form>

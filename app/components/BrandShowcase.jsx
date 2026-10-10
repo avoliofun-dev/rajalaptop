@@ -48,26 +48,63 @@ export default function BrandShowcase() {
         gap: "0.85rem",
         width: "100%"
       }}>
-        {brands.map((b, i) => (
-          <div key={b.id || i} style={{
-            background: "var(--bg-surface)",
-            border: "1px solid var(--glass-border)",
-            borderRadius: "var(--radius-md)",
-            padding: "1.1rem 0.85rem",
-            textAlign: "center",
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            gap: "0.4rem",
-            transition: "all var(--t-fast)",
-            cursor: "pointer",
-            minWidth: 0
-          }}>
-            <span style={{ fontSize: "1.8rem" }}>{b.icon || "💻"}</span>
-            <strong style={{ fontSize: "0.9rem", color: "var(--text-contrast)" }}>{b.name}</strong>
-            <span style={{ fontSize: "0.72rem", color: "var(--clr-primary)" }}>{b.desc || "Official Partner"}</span>
-          </div>
-        ))}
+        {brands.map((b, i) => {
+          const isImg =
+            typeof b.icon === "string" &&
+            (b.icon.startsWith("http://") ||
+              b.icon.startsWith("https://") ||
+              b.icon.startsWith("/") ||
+              b.icon.startsWith("data:image/") ||
+              b.icon.includes("/uploads/"));
+
+          return (
+            <div
+              key={b.id || i}
+              style={{
+                background: "var(--bg-surface)",
+                border: "1px solid var(--glass-border)",
+                borderRadius: "var(--radius-md)",
+                padding: "1.1rem 0.85rem",
+                textAlign: "center",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                gap: "0.4rem",
+                transition: "all var(--t-fast)",
+                cursor: "pointer",
+                minWidth: 0,
+              }}
+            >
+              <div
+                style={{
+                  height: "42px",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  maxWidth: "100%",
+                }}
+              >
+                {isImg ? (
+                  <img
+                    src={b.icon}
+                    alt={b.name}
+                    style={{
+                      maxHeight: "38px",
+                      maxWidth: "85px",
+                      objectFit: "contain",
+                      display: "block",
+                      filter: "drop-shadow(0 1px 3px rgba(0,0,0,0.15))",
+                    }}
+                  />
+                ) : (
+                  <span style={{ fontSize: "1.8rem", lineHeight: 1 }}>{b.icon || "💻"}</span>
+                )}
+              </div>
+              <strong style={{ fontSize: "0.9rem", color: "var(--text-contrast)" }}>{b.name}</strong>
+              <span style={{ fontSize: "0.72rem", color: "var(--clr-primary)" }}>{b.desc || "Official Partner"}</span>
+            </div>
+          );
+        })}
       </div>
     </section>
   );
