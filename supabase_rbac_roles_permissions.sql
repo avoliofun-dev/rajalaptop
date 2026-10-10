@@ -110,13 +110,25 @@ CREATE TABLE IF NOT EXISTS store_services (
   badge TEXT DEFAULT 'Layanan Resmi',
   duration TEXT DEFAULT '1-2 Hari',
   warranty TEXT DEFAULT '1 Bulan',
-  priceText TEXT DEFAULT 'Hubungi Kami',
+  price_text TEXT DEFAULT 'Hubungi Kami',
   features TEXT,
   sort_order INTEGER DEFAULT 1,
   is_active BOOLEAN DEFAULT TRUE,
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
+
+-- Pastikan kolom price_text, duration, warranty, features ada jika tabel sudah pernah dibuat sebelumnya
+ALTER TABLE store_services ADD COLUMN IF NOT EXISTS "desc" TEXT;
+ALTER TABLE store_services ADD COLUMN IF NOT EXISTS badge TEXT DEFAULT 'Layanan Resmi';
+ALTER TABLE store_services ADD COLUMN IF NOT EXISTS duration TEXT DEFAULT '1-2 Hari';
+ALTER TABLE store_services ADD COLUMN IF NOT EXISTS warranty TEXT DEFAULT '1 Bulan';
+ALTER TABLE store_services ADD COLUMN IF NOT EXISTS price_text TEXT DEFAULT 'Hubungi Kami';
+ALTER TABLE store_services ADD COLUMN IF NOT EXISTS features TEXT;
+ALTER TABLE store_services ADD COLUMN IF NOT EXISTS sort_order INTEGER DEFAULT 1;
+ALTER TABLE store_services ADD COLUMN IF NOT EXISTS is_active BOOLEAN DEFAULT TRUE;
+ALTER TABLE store_services ADD COLUMN IF NOT EXISTS updated_at TIMESTAMPTZ DEFAULT NOW();
+
 
 -- 9. TABEL ARTIKEL & TIPS EDUKASI
 CREATE TABLE IF NOT EXISTS articles (

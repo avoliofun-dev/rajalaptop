@@ -66,7 +66,11 @@ export async function GET() {
         .order("sort_order", { ascending: true });
 
       if (!error && data && data.length > 0) {
-        return NextResponse.json(data);
+        const formatted = data.map(item => ({
+          ...item,
+          priceText: item.priceText || item.price_text || "Hubungi Kami"
+        }));
+        return NextResponse.json(formatted);
       }
     }
     return NextResponse.json(DEFAULT_STORE_SERVICES);
@@ -82,11 +86,23 @@ export async function POST(request) {
 
   try {
     const body = await request.json();
-    const { title, desc, badge, duration, warranty, priceText, features, sort_order = 0 } = body;
+    const {
+      title,
+      desc,
+      badge,
+      duration,
+      warranty,
+      priceText,
+      price_text,
+      features,
+      sort_order = 0
+    } = body;
 
     if (!title || !title.trim()) {
       return NextResponse.json({ error: "Judul layanan wajib diisi" }, { status: 400 });
     }
+
+    const priceValue = priceText || price_text || "Hubungi Kami";
 
     const newService = {
       id: `srv-${Date.now()}`,
@@ -95,7 +111,7 @@ export async function POST(request) {
       badge: badge || "Layanan Resmi",
       duration: duration || "1-2 Hari",
       warranty: warranty || "1 Bulan",
-      priceText: priceText || "Hubungi Kami",
+      price_text: priceValue,
       features: features || "",
       sort_order: Number(sort_order) || 0,
       is_active: true,
@@ -119,7 +135,7 @@ export async function POST(request) {
       details: `Menambah layanan baru: ${newService.title}`
     });
 
-    return NextResponse.json({ success: true, service: newService });
+    return NextResponse.json({ success: true, service: { ...newService, priceText: priceValue } });
   } catch (error) {
     console.error("POST /api/store-services error:", error);
     return NextResponse.json({ error: error.message || "Gagal menambah layanan" }, { status: 500 });
@@ -132,11 +148,25 @@ export async function PUT(request) {
 
   try {
     const body = await request.json();
-    const { id, title, desc, badge, duration, warranty, priceText, features, sort_order, is_active } = body;
+    const {
+      id,
+      title,
+      desc,
+      badge,
+      duration,
+      warranty,
+      priceText,
+      price_text,
+      features,
+      sort_order,
+      is_active
+    } = body;
 
     if (!id) {
       return NextResponse.json({ error: "ID layanan wajib disertakan" }, { status: 400 });
     }
+
+    const priceValue = priceText !== undefined ? priceText : price_text;
 
     const updates = {
       title,
@@ -144,20 +174,20 @@ export async function PUT(request) {
       badge,
       duration,
       warranty,
-      priceText,
+      price_text: priceValue,
       features,
       sort_order: sort_order !== undefined ? Number(sort_order) : undefined,
       is_active: is_active !== undefined ? Boolean(is_active) : undefined,
       updated_at: new Date().toISOString()
     };
 
-    // Remove undefined
     Object.keys(updates).forEach(k => updates[k] === undefined && delete updates[k]);
 
     if (isSupabaseConfigured()) {
       const { error } = await supabaseAdmin.from("store_services").update(updates).eq("id", id);
       if (error) throw new Error(error.message);
     }
+
 
     await recordAuditLog({
       request,
