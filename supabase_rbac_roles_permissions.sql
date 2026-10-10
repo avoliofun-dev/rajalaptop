@@ -106,7 +106,7 @@ CREATE TABLE IF NOT EXISTS user_areas (
 CREATE TABLE IF NOT EXISTS store_services (
   id TEXT PRIMARY KEY,
   title TEXT NOT NULL,
-  desc TEXT,
+  "desc" TEXT,
   badge TEXT DEFAULT 'Layanan Resmi',
   duration TEXT DEFAULT '1-2 Hari',
   warranty TEXT DEFAULT '1 Bulan',
