@@ -160,6 +160,7 @@ export default function AdminLayout({ children }) {
       items: [
         { id: "settings", label: "Konfigurasi Web", href: "/admin/settings", icon: "⚙️", permission: "settings.manage" },
         { id: "heroslider", label: "Hero Slider", href: "/admin/heroslider", icon: "🖼️", permission: "settings.manage" },
+        { id: "brands", label: "Brand Resmi Partner", href: "/admin/brands", icon: "🏷️", permission: "settings.manage" },
         { id: "layanan", label: "Servis & Reparasi", href: "/admin/layanan", icon: "🔧", permission: "marketing.view" },
         { id: "artikel", label: "Tips & Artikel", href: "/admin/artikel", icon: "📰", permission: "marketing.view" },
         { id: "footer", label: "Footer Info", href: "/admin/footer", icon: "👣", permission: "settings.manage" },
