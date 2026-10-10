@@ -268,62 +268,11 @@ export default function AdminLayout({ children }) {
                 </>
               )}
             </Link>
-            <span
-              style={{
-                fontSize: "0.65rem",
-                background: "hsla(220, 90%, 56%, 0.15)",
-                color: "var(--clr-primary)",
-                padding: "2px 6px",
-                borderRadius: "4px",
-                fontWeight: 700,
-              }}
-            >
-              RBAC v5
-            </span>
           </div>
 
-          {/* Active Role & Scope Card */}
-          <div
-            style={{
-              margin: "1rem 1rem 0.5rem",
-              padding: "0.85rem",
-              background: "var(--bg-card)",
-              border: `1px solid ${roleMeta.color}`,
-              borderRadius: "var(--radius-md)",
-              boxShadow: `0 0 10px ${roleMeta.color}33`,
-              flexShrink: 0,
-            }}
-          >
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "4px" }}>
-              <span style={{ fontSize: "0.7rem", color: "var(--text-muted)", textTransform: "uppercase", fontWeight: 700 }}>
-                Role Anda
-              </span>
-              <span
-                style={{
-                  background: roleMeta.color,
-                  color: "#fff",
-                  fontSize: "0.65rem",
-                  padding: "2px 6px",
-                  borderRadius: "var(--radius-full)",
-                  fontWeight: 800,
-                }}
-              >
-                {roleMeta.name}
-              </span>
-            </div>
-            <div style={{ fontSize: "0.75rem", color: "var(--text-secondary)", marginTop: "2px", display: "flex", alignItems: "center", gap: "4px" }}>
-              <span>📍 Scope: <strong>{adminUser.defaultScope}</strong></span>
-            </div>
-            {adminUser.stores && adminUser.stores.length > 0 && (
-              <div style={{ fontSize: "0.7rem", color: "var(--text-muted)", marginTop: "3px" }}>
-                Cabang: {adminUser.stores[0].name}
-              </div>
-            )}
-          </div>
-
-          {/* Dynamic Navigation Grouped */}
-          <nav style={{ padding: "0.5rem 0.85rem 1rem", flex: 1, display: "flex", flexDirection: "column", gap: "1rem", overflowY: "auto" }}>
-            {visibleGroups.map((group, grpIdx) => (
+          {/* Dynamic Navigation Grouped (Hanya menu yang diizinkan untuk admin) */}
+          <nav style={{ padding: "1rem 0.85rem", flex: 1, display: "flex", flexDirection: "column", gap: "1rem", overflowY: "auto" }}>
+            {visibleGroups.map((group) => (
               <div key={group.group} style={{ display: "flex", flexDirection: "column", gap: "0.2rem" }}>
                 <div
                   style={{
@@ -333,15 +282,9 @@ export default function AdminLayout({ children }) {
                     padding: "0.25rem 0.6rem",
                     fontWeight: 800,
                     letterSpacing: "0.6px",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
                   }}
                 >
-                  <span>{group.group}</span>
-                  {grpIdx === 0 && (
-                    <span style={{ fontSize: "0.65rem", opacity: 0.7 }}>({totalVisibleMenus} menu)</span>
-                  )}
+                  {group.group}
                 </div>
 
                 <div style={{ display: "flex", flexDirection: "column", gap: "0.25rem" }}>
@@ -356,7 +299,7 @@ export default function AdminLayout({ children }) {
                           display: "flex",
                           alignItems: "center",
                           gap: "0.75rem",
-                          padding: "0.6rem 0.85rem",
+                          padding: "0.65rem 0.85rem",
                           borderRadius: "var(--radius-md)",
                           fontSize: "0.85rem",
                           fontWeight: isActive ? 700 : 500,
@@ -374,91 +317,6 @@ export default function AdminLayout({ children }) {
               </div>
             ))}
           </nav>
-
-          {/* User Profile & Logout */}
-          <div
-            style={{
-              padding: "1rem 1.25rem",
-              borderTop: "1px solid var(--glass-border)",
-              background: "var(--bg-surface)",
-              marginTop: "auto",
-              flexShrink: 0,
-            }}
-          >
-            <div style={{ display: "flex", alignItems: "center", gap: "0.6rem", marginBottom: "0.6rem" }}>
-              {adminUser.avatar ? (
-                <img
-                  src={adminUser.avatar}
-                  alt={adminUser.name}
-                  style={{
-                    width: "34px",
-                    height: "34px",
-                    borderRadius: "50%",
-                    objectFit: "cover",
-                    border: `1.5px solid ${roleMeta.color}`,
-                    flexShrink: 0,
-                  }}
-                />
-              ) : (
-                <div
-                  style={{
-                    width: "34px",
-                    height: "34px",
-                    borderRadius: "50%",
-                    background: roleMeta.color,
-                    color: "#fff",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    fontSize: "0.85rem",
-                    fontWeight: 800,
-                    flexShrink: 0,
-                  }}
-                >
-                  {adminUser.name ? adminUser.name.charAt(0).toUpperCase() : "A"}
-                </div>
-              )}
-              <div style={{ overflow: "hidden", minWidth: 0, flex: 1 }}>
-                <strong style={{ display: "block", fontSize: "0.85rem", color: "var(--text-contrast)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
-                  {adminUser.name}
-                </strong>
-                <span style={{ fontSize: "0.7rem", color: "var(--text-muted)" }}>{adminUser.email}</span>
-              </div>
-            </div>
-            <div style={{ display: "flex", gap: "0.5rem" }}>
-              <Link
-                href="/"
-                style={{
-                  flex: 1,
-                  textAlign: "center",
-                  background: "var(--bg-card)",
-                  border: "1px solid var(--glass-border)",
-                  padding: "0.4rem",
-                  borderRadius: "var(--radius-sm)",
-                  fontSize: "0.75rem",
-                  color: "var(--text-secondary)",
-                }}
-              >
-                Lihat Toko
-              </Link>
-              <button
-                onClick={handleLogout}
-                style={{
-                  flex: 1,
-                  background: "hsla(0, 80%, 58%, 0.15)",
-                  border: "1px solid var(--clr-danger)",
-                  color: "#ff8b8b",
-                  padding: "0.4rem",
-                  borderRadius: "var(--radius-sm)",
-                  fontSize: "0.75rem",
-                  cursor: "pointer",
-                  fontWeight: 600,
-                }}
-              >
-                Keluar
-              </button>
-            </div>
-          </div>
         </div>
       </aside>
 
