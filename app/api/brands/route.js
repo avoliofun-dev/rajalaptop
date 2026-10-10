@@ -88,9 +88,28 @@ export async function PUT(request) {
     Object.keys(updates).forEach((k) => updates[k] === undefined && delete updates[k]);
 
     if (isSupabaseConfigured()) {
-      const { error } = await supabaseAdmin.from("brands").update(updates).eq("id", id);
-      if (error) throw new Error(error.message);
+      // Coba update by id
+      const { data: updatedRows, error } = await supabaseAdmin
+        .from("brands")
+        .update(updates)
+        .eq("id", id)
+        .select();
+
+      if (error) {
+        console.warn("Update by ID failed, trying by name:", error.message);
+      }
+
+      // Jika ID tidak cocok (misal database baru di-seed dengan ID berbeda), coba update by name atau insert
+      if (!updatedRows || updatedRows.length === 0) {
+        if (name) {
+          const { error: upsertErr } = await supabaseAdmin
+            .from("brands")
+            .upsert({ name, icon: updates.icon, "desc": updates.desc || "Official Partner" }, { onConflict: "name" });
+          if (upsertErr) throw new Error(upsertErr.message);
+        }
+      }
     }
+
 
     await recordAuditLog({
       request,

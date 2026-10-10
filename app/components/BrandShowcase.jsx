@@ -10,7 +10,7 @@ export default function BrandShowcase() {
     let ignore = false;
     async function loadBrands() {
       try {
-        const res = await fetch("/api/brands");
+        const res = await fetch(`/api/brands?t=${Date.now()}`, { cache: "no-store" });
         if (res.ok) {
           const data = await res.json();
           if (!ignore && Array.isArray(data)) {
