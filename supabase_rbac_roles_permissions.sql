@@ -102,6 +102,39 @@ CREATE TABLE IF NOT EXISTS user_areas (
   PRIMARY KEY (user_id, area_id)
 );
 
+-- 8. TABEL KONTEN LAYANAN TOKO (SERVIS & REPARASI)
+CREATE TABLE IF NOT EXISTS store_services (
+  id TEXT PRIMARY KEY,
+  title TEXT NOT NULL,
+  desc TEXT,
+  badge TEXT DEFAULT 'Layanan Resmi',
+  duration TEXT DEFAULT '1-2 Hari',
+  warranty TEXT DEFAULT '1 Bulan',
+  priceText TEXT DEFAULT 'Hubungi Kami',
+  features TEXT,
+  sort_order INTEGER DEFAULT 1,
+  is_active BOOLEAN DEFAULT TRUE,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- 9. TABEL ARTIKEL & TIPS EDUKASI
+CREATE TABLE IF NOT EXISTS articles (
+  id TEXT PRIMARY KEY,
+  title TEXT NOT NULL,
+  slug TEXT UNIQUE,
+  category TEXT DEFAULT 'Tips & Panduan',
+  author TEXT DEFAULT 'Admin',
+  readTime TEXT DEFAULT '5 Menit',
+  summary TEXT,
+  content TEXT,
+  imageUrl TEXT,
+  is_published BOOLEAN DEFAULT TRUE,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+
 -- ==============================================================================
 -- SEED DATA 1: AREAS & CABANG TOKO
 -- ==============================================================================
